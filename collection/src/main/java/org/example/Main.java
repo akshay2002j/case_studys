@@ -21,6 +21,13 @@ public class Main {
         list.add(3,3); //it shift all elements to left
         System.out.println(list);
 
+        ListIterator listIterator = list.listIterator();
+//
+//        while(listIterator.hasNext()){
+//            System.out.println(listIterator.next());
+//
+//        }
+
 
         LinkedList<Integer> linkedList = new LinkedList<>();
         linkedList.add(101);
@@ -82,21 +89,3 @@ public class Main {
     }
 }
 
-class User{
-    int id ;
-    String name;
-    public User(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return " Name:- " + this.name;
-    }
-}

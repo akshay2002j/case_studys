@@ -1,4 +1,4 @@
-package org.example;
+package org.example.sorting;
 
 public class Student implements Comparable<Student> {
     String name;
@@ -6,6 +6,22 @@ public class Student implements Comparable<Student> {
 
     public Student(String name, int gpa) {
         this.name = name;
+        this.gpa = gpa;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getGpa() {
+        return gpa;
+    }
+
+    public void setGpa(double gpa) {
         this.gpa = gpa;
     }
 

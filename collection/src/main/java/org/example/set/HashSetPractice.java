@@ -38,7 +38,8 @@ public class HashSetPractice {
          Iterator<String>  itr = treSet.iterator();
 
 
-
+        HashSet<String> hashSet = new LinkedHashSet<>(treSet);
+        System.out.println(hashSet);
 
 
     }

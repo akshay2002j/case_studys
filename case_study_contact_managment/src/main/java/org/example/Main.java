@@ -47,7 +47,7 @@ public class Main {
                     case 2 -> {
                         System.out.println("Enter Contact Phone Number:");
                         String phone = sc.nextLine();
-                        contactService.deleteContact(phone);
+                        contactService.deleteContact(phone,contactBinarySearchTree);
                     }
                     case 3 -> {
                         contactBinarySearchTree.displayAlphabetically();
@@ -57,7 +57,7 @@ public class Main {
                         String phone = sc.nextLine();
                         System.out.println("Enter Contact Name:");
                         String name = sc.nextLine();
-                        contactService.updateContact(phone, new Contact(name, phone));
+                        contactService.updateContact(phone, new Contact(name, phone),contactBinarySearchTree);
                     }
                     case 5 -> {
                         System.out.println("Search By Name Or Phone Number:- 1 -> for Name 2 -> for Phone Number");

@@ -12,6 +12,8 @@ public class ContactService {
 
     Stack<String> searchHistroyStack = new Stack<>();
 
+    HashMap<String,Contact> searchContacts = new LinkedHashMap<>(16,0.75f,true);
+
 
     //first check if the contact present then add if absent
     public void addContact(Contact contact, ContactBinarySearchTree contactBinarySearchTree) {
@@ -40,7 +42,8 @@ public class ContactService {
 
     //search contact by name and maintain search history
     public void searchContact(String seachKey,boolean byPhone) {
-        searchHistroyStack.push(seachKey);
+       searchHistroyStack.push(seachKey);
+
         //search by Phone
         if (byPhone) {
             Optional.ofNullable(contacts.get(seachKey)).ifPresent(System.out::println);
@@ -73,11 +76,18 @@ public class ContactService {
 
 
     //update the contact if present based on phone number
-    public  void updateContact(String phone ,Contact contact) {
+    public  void updateContact(String phone ,Contact contact,ContactBinarySearchTree contactBinarySearchTree) {
         if (contacts.containsKey(contact.getPhone())) {
             contacts.computeIfPresent(contact.getPhone(), (key, value) -> contact);
-            recentAdditionQueue.stream().filter(contact1 -> contact1.getPhone().equals(phone)).findFirst().map(contact1 -> contact);
+            recentAdditionQueue.stream().
+                    filter(contact1 -> contact1.getPhone().equals(phone)).
+                    findFirst().ifPresent((contact1) -> {
+                        contact1.setName(contact.getName());
+                        contact1.setPhone(contact.getPhone());
+                    });
 //            TODO:[] update to tree
+            contactBinarySearchTree.updateContactTree(contact.getName(), contact.getPhone());
+
             System.out.println("Contact updated");
         }
         else  {
@@ -86,11 +96,14 @@ public class ContactService {
     }
 
     //delete the Contact from hashMap if present
-    public void deleteContact(String phone) {
+    public void deleteContact(String phone,ContactBinarySearchTree contactBinarySearchTree) {
 
         if (contacts.containsKey(phone)) {
-            contacts.remove(phone);
-            //            TODO:[] delete from tree
+            recentAdditionQueue.remove(contacts.get(phone));
+           contacts.remove(phone);
+           //   TODO:[] delete from tree
+            contactBinarySearchTree.deleteContact(phone);
+
             System.out.println("Contact deleted");
         }
         else {
@@ -105,7 +118,11 @@ public class ContactService {
             System.out.println("No history found");
         }
         else {
-            searchHistroyStack.forEach(System.out::println);
+           // searchHistroyStack.forEach(System.out::println);
+
+            for (int i = searchHistroyStack.size()-1; i >=0; i--) {
+                System.out.println(searchHistroyStack.get(i));
+            }
 
         }
     }
@@ -114,10 +131,6 @@ public class ContactService {
     public void recentlyAddedContacts(){
         if (!recentAdditionQueue.isEmpty()){
             recentAdditionQueue.forEach(System.out::println);
-//
-//            for (int i = 0; i < recentAdditionQueue.size(); i++) {
-//                System.out.println(recentAdditionQueue.);
-//            }
         }
         else {
             System.out.println("No history found");

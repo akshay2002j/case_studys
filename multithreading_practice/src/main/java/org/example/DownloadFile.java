@@ -2,7 +2,8 @@ package org.example;
 
 
 public class DownloadFile implements Runnable {
-    String filcdename;
+    String filename;
+
     public DownloadFile(String filename) {
         this.filename = filename;
     }

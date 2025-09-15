@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fill up the User Data</title>
+</head>
+<body>
+
+<div id="userContainer" >
+
+    <form action="UserDetail" method="post">
+        <label>Enter the following User Records</label> <br><br>
+        <label>Name:-</label>
+        <input type="text" placeholder="enter name" name="name"><br><br>
+        <label>Email:-</label>
+        <input type="text" placeholder="enter email" name="email"><br><br>
+        <label>Country:-</label>
+        <input type="text" placeholder="enter country " name="country"><br><br>
+        <label>Gender: </label>
+        <input type="radio" name="gender" value="male" />Male
+        <input type="radio" name="gender" value="female" />Female
+        <input type="radio" name="gender" value="other" />Other <br><br>
+        <input type='hidden' name='action' value='post' />
+        <button type="submit">submit</button>
+    </form>
+    <a href="UserDetail">See Entries</a>
+</div>
+</body>
+</html>

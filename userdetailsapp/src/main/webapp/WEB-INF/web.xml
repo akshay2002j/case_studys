@@ -1,0 +1,42 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+
+        <!-- global-->
+    <context-param>
+        <param-name>dbURL</param-name>
+        <param-value>jdbc:mysql://localhost:3306/userdb</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbUser</param-name>
+        <param-value>root</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbPassword</param-name>
+        <param-value>root</param-value>
+    </context-param>
+    <filter>
+        <filter-name>DataValidationFilter</filter-name>
+        <filter-class>sevlets.DataValidationFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>DataValidationFilter</filter-name>
+        <url-pattern></url-pattern>
+    </filter-mapping>
+    <servlet>
+        <servlet-name>userdetail</servlet-name>
+        <servlet-class>sevlets.UserDetail</servlet-class>
+        <init-param>
+            <param-name>tableName</param-name>
+            <param-value>user_details</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>userdetail</servlet-name>
+        <url-pattern>/UserDetail</url-pattern>
+    </servlet-mapping>
+
+</web-app>

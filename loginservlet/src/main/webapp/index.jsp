@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" isELIgnored="false" errorPage="error.jsp"%>
 <html>
   <body>
+     <%! String name = "akshay@gmail.com"; %>
     <a href="hello">Hello ${param.email}</a>
     <center>
+
     <div id="mainDiv">
       <form action="main.jsp" method="post">
-        <input placeholder="email" name="email" /><br><br>
-        <input placeholder="password" name="password" /><br><br>
+        <input placeholder="email" name="email" value = ${name}><br><br>
+        <input placeholder="password" name="password"  /><br><br>
         <button type="submit">submit</button>
       </form>
     </div>

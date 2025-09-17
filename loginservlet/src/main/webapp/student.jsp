@@ -1,10 +1,6 @@
 
-
-
-<hmtl>
-
+<html>
 <body>
-
 <center>
         <p><%=
         request.getParameter("students")

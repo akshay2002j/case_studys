@@ -1,12 +1,16 @@
 package com.example.paymentservice.controller;
 
 
+import com.example.paymentservice.dto.TransactionWithUserDTO;
 import com.example.paymentservice.dto.UserDTO;
+import com.example.paymentservice.interceptor.RequestContext;
 import com.example.paymentservice.service.userservice.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -14,6 +18,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RequestContext requestContext;
 
     @PostMapping("/")
     public ResponseEntity<String> registerUser(  @RequestBody UserDTO user) {

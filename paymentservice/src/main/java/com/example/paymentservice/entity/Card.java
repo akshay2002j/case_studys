@@ -1,13 +1,12 @@
 package com.example.paymentservice.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
-@Embeddable
-public class CardPayment {
+@Entity
+public class Card {
+    @Id
     String cardNumber;
     String expirationDate;
     String cvv;

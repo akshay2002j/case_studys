@@ -1,8 +1,8 @@
-package com.example.paymentservice.service.paymentservice.payment_type;
+package com.example.paymentservice.service.paymentservice.payment_provider;
 
 import java.security.SecureRandom;
 
-public abstract class AbstractPaymentType<T> implements PaymentType<T> {
+public abstract class AbstractPaymentProvider<T> implements PaymentProvider<T> {
 
     private static final SecureRandom secureRandom = new SecureRandom();
 

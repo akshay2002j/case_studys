@@ -2,13 +2,16 @@ package com.example.paymentservice.service.userservice;
 
 import com.example.paymentservice.dto.UserDTO;
 import com.example.paymentservice.entity.User;
+import com.example.paymentservice.exception.UserNotFoundException;
 import com.example.paymentservice.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class UserService {
 
@@ -29,18 +32,22 @@ public class UserService {
     }
 
     public UserDTO getUserById(String userId){
-         User user = userRepository.findById(userId).orElse(null);
-         if (user == null){
-             return null;
-         }
+
+         User user = userRepository.findById(userId).orElseThrow(
+                 ()->{
+                     log.debug("User not found with id {}",userId);
+                     return new UserNotFoundException("User not found");}
+         );
          return modelMapper.map(user,UserDTO.class);
     }
 
     public String updateUser(UserDTO userDto){
-        User saveduser = userRepository.getReferenceById(userDto.getUserId());
+        User saveduser = Optional.of(userRepository.getReferenceById(userDto.getUserId())).orElseThrow(
+                ()-> new UserNotFoundException("User not found with id: " + userDto.getUserId())
+        );
         saveduser.setUserEmail(userDto.getUserEmail());
         saveduser.setUserPassword(userDto.getUserPassword());
-        saveduser.setPaymentList(userDto.getPaymentList());
+        saveduser.setTransactionList(userDto.getTransactionList());
         return userRepository.save(saveduser).getUserId();
     }
 
@@ -52,4 +59,6 @@ public class UserService {
     public User getUserByEmail(String email){
        return userRepository.findByUserEmail(email);
     }
+
+
 }

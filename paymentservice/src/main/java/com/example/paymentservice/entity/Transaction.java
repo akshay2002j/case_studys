@@ -2,44 +2,36 @@ package com.example.paymentservice.entity;
 
 import com.example.paymentservice.constant.PaymentStatus;
 import com.example.paymentservice.constant.PaymentType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.lang.NonNull;
 
 import java.sql.Date;
 
 @Data
 @Entity
-public class Payment {
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String paymentId;
+    private String transactionId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus paymentStatus;
+    private PaymentStatus transactionStatus;
 
-    @Column(name = "payment_date")
-    private Date paymentDate;
+    @Column(name = "transaction_date")
+    private Date transactionDate;
 
-    private Double paymentAmount;
+    private Double transactionAmount;
 
-    // Optional, depending on type
-    @Embedded
-    private CardPayment cardPayment;
-
-    private String upiId;
-
-    private String netBankingUsername;
-    private String netBankingPassword;
-
-    private String mobileNo;
 }
 

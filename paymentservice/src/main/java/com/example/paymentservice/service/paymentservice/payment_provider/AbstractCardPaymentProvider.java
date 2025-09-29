@@ -12,7 +12,7 @@ public abstract class AbstractCardPaymentProvider extends AbstractPaymentProvide
 
     @Override
     public boolean validateDetails(Map<String,Object> data ) {
-        System.out.println(data);
+        log.debug("Validating user {}",data.get("cardHolderName"),"for Card PaymentProvider");
         if(data!= null){
             log.info("CardPayment validated");
            return Helper.validateCardDetails(data.get("cvv").toString(), data.get("cardNumber").toString());

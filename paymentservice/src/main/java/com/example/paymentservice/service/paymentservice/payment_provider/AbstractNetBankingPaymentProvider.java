@@ -19,10 +19,11 @@ public class AbstractNetBankingPaymentProvider  extends AbstractPaymentProvider<
         try {
             String username = (String) data.get("username");
             String rawPassword = (String) data.get("userpasword"); // ⚠️ confirm spelling in JSON
-
             User user = userService.getUserByEmail(username);
+            log.debug("Received request to validate user {}",user, "for NetBankingPaymentProvider");
             if (user == null) {
                 // User not found
+                log.error("User {} not found for NetBanking Validation",username);
                 return false;
             }
 
@@ -30,6 +31,7 @@ public class AbstractNetBankingPaymentProvider  extends AbstractPaymentProvider<
                     && user.getUserPassword().equalsIgnoreCase(rawPassword);
 
         } catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             return false;
         }

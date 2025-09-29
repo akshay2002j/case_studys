@@ -5,9 +5,11 @@ import com.example.paymentservice.constant.PaymentType;
 import com.example.paymentservice.service.paymentservice.payment_provider.AbstractCardPaymentProvider;
 
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service("CARD")
 public class CardPaymentProvider extends AbstractCardPaymentProvider {
 
@@ -20,6 +22,7 @@ public class CardPaymentProvider extends AbstractCardPaymentProvider {
     @PostConstruct
     public void init() {
         paymentTypeBeanMap.putPaymentType(PaymentType.CARD,this);
+        log.debug("Bean of the CARD payment provider injected in HashMap");
     }
 
 }

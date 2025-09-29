@@ -2,8 +2,10 @@ package com.example.paymentservice.service.paymentservice.payment_provider;
 
 import com.example.paymentservice.entity.NetBanking;
 import com.example.paymentservice.entity.User;
+import com.example.paymentservice.interceptor.RequestContext;
 import com.example.paymentservice.service.userservice.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.webmvc.core.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
@@ -13,6 +15,9 @@ public class AbstractNetBankingPaymentProvider  extends AbstractPaymentProvider<
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    RequestContext requestContext;
 
     @Override
     public boolean validateDetails(Map<String, Object> data) {
@@ -31,7 +36,7 @@ public class AbstractNetBankingPaymentProvider  extends AbstractPaymentProvider<
                     && user.getUserPassword().equalsIgnoreCase(rawPassword);
 
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("Exception Occured While validating the NetBanking Credentials",e.getMessage(),"for user {}",requestContext.getUserID());
             e.printStackTrace();
             return false;
         }

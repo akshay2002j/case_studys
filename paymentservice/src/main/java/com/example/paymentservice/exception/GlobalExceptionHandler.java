@@ -35,5 +35,9 @@ public class GlobalExceptionHandler{
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
     }
 
+    @ExceptionHandler(value = TransactionNotFound.class)
+    public ResponseEntity<?> handleUserNotFoundException(TransactionNotFound e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction not found");
+    }
 
 }

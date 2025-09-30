@@ -1,6 +1,8 @@
 package org.example.service;
 
+import org.example.constant.AccountErrorCode;
 import org.example.entity.User;
+import org.example.exception.BankOperationException;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -16,27 +18,29 @@ public class BankService {
  private Lock readLock = readWriteLock.readLock();
  private Lock writeLock = readWriteLock.writeLock();
 
-    public void openAccount(User user) {
+    public Long openAccount(User user) {
         boolean acquired;
         try {
            acquired =  writeLock.tryLock(200, TimeUnit.MILLISECONDS);
            if(acquired) {
                if (accountsUserBankMap.containsKey(user.getAccountNo())) {
-                   System.out.println("Account already exists!");
+                   throw new BankOperationException(AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getCode(),AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getMessage());
                } else {
                        accountsUserBankMap.putIfAbsent(user.getAccountNo(), user);
-                       System.out.println("Account created!");
+                      System.out.println("Account created!");
                }
            }
            else {
                System.out.println("Lock acquired try again to open account!..!");
            }
+        } catch (BankOperationException e) {
+            System.out.println(e.getCode()+ " " + e.getMessage());
         } catch (InterruptedException e) {
             System.out.println("InterruptedException" + e.getMessage());
-            Thread.currentThread().interrupt();
         } finally {
             writeLock.unlock();
         }
+        return user.getAccountNo();
     }
 
     ///deposit amount the To respective account
@@ -46,8 +50,7 @@ public class BankService {
             acquired =  writeLock.tryLock(200, TimeUnit.MILLISECONDS);
             if(acquired) {
                 if (!accountsUserBankMap.containsKey(accountNo)) {
-                    System.out.println("Account doesn't exists!");
-
+                    throw new BankOperationException(AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getCode(),AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getMessage());
                 } else {
                     User user = accountsUserBankMap.get(accountNo);
                     user.getBalance().getAndAdd(amount);
@@ -58,9 +61,11 @@ public class BankService {
                 System.out.println("Lock acquired try again to deposit account!..!");
             }
         }
+        catch (BankOperationException e) {
+            System.out.println(e.getCode()+ " " + e.getMessage());
+        }
         catch (InterruptedException e) {
             System.out.println("InterruptedException" + e.getMessage());
-            Thread.currentThread().interrupt();
         }
         finally {
             writeLock.unlock();
@@ -74,37 +79,53 @@ public class BankService {
         try {
             acquired = writeLock.tryLock(200,TimeUnit.MILLISECONDS);
             if (!accountsUserBankMap.containsKey(accountNo)) {
-                System.out.println("Account doesn't exists!");
+                throw new BankOperationException(AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getCode(),AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getMessage());
             } else {
                 User user = accountsUserBankMap.get(accountNo);
-                user.getBalance().getAndAdd(-amount);
-                System.out.println("Withdraw Successful!");
+                if(user.getBalance().get()>=amount) {
+                    user.getBalance().getAndAdd(-amount);
+                    System.out.println("Withdraw Successful!");
+                }else {
+                    throw new BankOperationException(AccountErrorCode.ACCOUNT_BALANCE_NOT_ENOUGH.getCode(), AccountErrorCode.ACCOUNT_BALANCE_NOT_ENOUGH.getMessage());
+                }
             }
         } catch (InterruptedException e) {
             System.out.println("InterruptedException" + e.getMessage());
-            Thread.currentThread().interrupt();
+        } catch (BankOperationException e) {
+            System.out.println(e.getCode()+ " " + e.getMessage());
         }
         finally {
             writeLock.unlock();
         }
 
     }
-    public void transfer(Long fromAccountNo, Long toAccountNo, long amount){
-        if (!accountsUserBankMap.containsKey(fromAccountNo)) {
-            System.out.println("Account doesn't exists!");
+    public void transfer(Long fromAccountNo, Long toAccountNo, long amount)  {
+
+        boolean acquired;
+        try {
+                acquired = writeLock.tryLock(200, TimeUnit.MILLISECONDS);
+            if (!accountsUserBankMap.containsKey(fromAccountNo)) {
+                throw new BankOperationException(AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getCode(),AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getMessage());
+            }
+            if (!accountsUserBankMap.containsKey(toAccountNo)) {
+                System.out.println("Account doesn't exists of receiver!");
+            }
+            User fromUser = accountsUserBankMap.get(fromAccountNo);
+            User toUser = accountsUserBankMap.get(toAccountNo);
+            if (fromUser.getBalance().get() >= amount) {
+                fromUser.getBalance().getAndAdd(-amount);
+                toUser.getBalance().getAndAdd(amount);
+                System.out.println("Transfer Successful!");
+            } else {
+                throw new BankOperationException(AccountErrorCode.ACCOUNT_BALANCE_NOT_ENOUGH.getCode(), AccountErrorCode.ACCOUNT_BALANCE_NOT_ENOUGH.getMessage());
+            }
+        } catch (InterruptedException e) {
+            System.out.println("InterruptedException" + e.getMessage());
+        } catch (BankOperationException e) {
+            System.out.println(e.getCode()+ " " + e.getMessage());
         }
-        if (!accountsUserBankMap.containsKey(toAccountNo)) {
-            System.out.println("Account doesn't exists of receiver!");
-        }
-        User fromUser =  accountsUserBankMap.get(fromAccountNo);
-        User toUser =  accountsUserBankMap.get(toAccountNo);
-        if (fromUser.getBalance().get() >= amount) {
-            fromUser.getBalance().getAndAdd(-amount);
-            toUser.getBalance().getAndAdd(amount);
-            System.out.println("Transfer Successful!");
-        }
-        else {
-            System.out.println("Transfer Failed Insufficient Balance!");
+        finally {
+            writeLock.unlock();
         }
     }
 
@@ -122,7 +143,7 @@ public class BankService {
             if (readLock.tryLock(200,TimeUnit.MILLISECONDS)) {
 
                 if (!accountsUserBankMap.containsKey(accountNo)) {
-                    System.out.println("Account doesn't exists!");
+                    throw new BankOperationException(AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getCode(),AccountErrorCode.ACCOUNT_ALREADY_EXISTS.getMessage());
                 } else {
                     User user = accountsUserBankMap.get(accountNo);
                     System.out.println("Account Holder Name:- " + user.getName());
@@ -133,7 +154,9 @@ public class BankService {
             else {
                 System.out.println("Lock acquired try again to read account!..!");
             }
-        } catch (InterruptedException e) {
+        }catch (BankOperationException e) {
+            System.out.println(e.getCode()+ " " + e.getMessage());
+        }catch (InterruptedException e) {
             System.out.println("InterruptedException" + e.getMessage());
         }
         finally {

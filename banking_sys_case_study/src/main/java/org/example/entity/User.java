@@ -1,5 +1,6 @@
 package org.example.entity;
 
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class User {

@@ -55,15 +55,13 @@ public class UserController {
     @GetMapping("/{Id}")
     public ResponseEntity<UserDTO> getUser(@Parameter(description = "Unique Id of the user")
                                                @PathVariable String Id) {
-        log.info("Received request to get user {}",Id);
         UserDTO user =   userService.getUserById(Id);
-        log.info("User {} get successfully",user);
         return new ResponseEntity<UserDTO>(user, HttpStatus.OK);
     }
 
     @Operation(summary = "Delete the user from system based on the unique userId provided")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> updateUser(@Parameter(description = "Unique Id of the user")
+    public ResponseEntity<String> deleteUser(@Parameter(description = "Unique Id of the user")
                                                  @PathVariable String id) {
         log.info("Received request to delete user {}",id);
         String userId =   userService.deleteUser(id);

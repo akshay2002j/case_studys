@@ -5,8 +5,8 @@ import com.example.paymentservice.constant.PaymentType;
 import com.example.paymentservice.dto.TransactionRequest;
 import com.example.paymentservice.entity.Transaction;
 import com.example.paymentservice.entity.User;
-import com.example.paymentservice.exception.TransactionNotFound;
-import com.example.paymentservice.exception.UserNotFoundException;
+import com.example.paymentservice.exception.TransactionException;
+import com.example.paymentservice.exception.UserException;
 import com.example.paymentservice.interceptor.RequestContext;
 import com.example.paymentservice.repository.TransactionRepository;
 import com.example.paymentservice.repository.UserRepository;
@@ -18,7 +18,7 @@ import java.sql.Date;
 
 @Slf4j
 @Service
-public class TransactionProcessorService implements TransactionProcessor {
+public class TransactionService implements ITransactionService {
 
 
     @Autowired
@@ -35,7 +35,7 @@ public class TransactionProcessorService implements TransactionProcessor {
         User user  = userRepository.findById(userId).orElseThrow(
                 () ->{
                     log.error("User not found for user {}",userId,"For initiateTransaction");
-                    return  new UserNotFoundException("User not found with id: " + userId);
+                    return  new UserException("User not found with id: " + userId);
                 }
         );
         Transaction transaction = new Transaction();
@@ -53,7 +53,7 @@ public class TransactionProcessorService implements TransactionProcessor {
         Transaction transaction = transactionRepository.findById(transId).orElseThrow(
                 () -> {
                     log.error("Transaction not found with id {}", transId,"for user id{}",requestContext.getUserID());
-                    return new TransactionNotFound("Transaction not found with id: " + transId);
+                    return new TransactionException("Transaction not found with id: " + transId);
                 }
         );
         transaction.setTransactionAmount(transactionRequest.getAmount());
@@ -69,7 +69,7 @@ public class TransactionProcessorService implements TransactionProcessor {
         Transaction transaction = transactionRepository.findById(transId).orElseThrow(
                 () -> {
                     log.error("Transaction not found with id {}", transId,"for user id{}",requestContext.getUserID());
-                return new TransactionNotFound("Transaction Not Found with Id:-" + transId);
+                return new TransactionException("Transaction Not Found with Id:-" + transId);
 
                 }
         );

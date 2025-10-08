@@ -6,8 +6,6 @@
     <body>
     <center>
      <h2>Data from student Jsp</h2>
-
-         <c:forEach>
      </center>
     </body>
 </html>

@@ -3,7 +3,6 @@ package com.example.paymentservice.entity;
 import com.example.paymentservice.constant.PaymentStatus;
 import com.example.paymentservice.constant.PaymentType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import jakarta.persistence.*;
 import lombok.Data;
 

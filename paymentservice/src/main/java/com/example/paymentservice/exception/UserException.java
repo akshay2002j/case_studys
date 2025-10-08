@@ -1,11 +1,11 @@
 package com.example.paymentservice.exception;
 
 
-public class UserNotFoundException  extends RuntimeException{
+public class UserException extends RuntimeException{
 
     String message;
 
-    public UserNotFoundException(String message){
+    public UserException(String message){
         super(message);
         this.message = message;
     }

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.security.SecureRandom;
 
 @Slf4j
-public abstract class AbstractPaymentProvider<T> implements PaymentProvider<T> {
+public abstract class AbstractIPaymentProvider <T> implements IPaymentProvider<T> {
 
     private static final SecureRandom secureRandom = new SecureRandom();
 

@@ -1,8 +1,8 @@
 package com.example.paymentservice.exception;
 
-public class TransactionNotFound extends RuntimeException {
+public class TransactionException extends RuntimeException {
 
-   public TransactionNotFound(String message){
+   public TransactionException(String message){
         super(message);
     }
 }

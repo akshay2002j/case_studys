@@ -4,6 +4,7 @@ import com.example.banking_sys_with_mongo.model.Account;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 public class UserDto {
@@ -12,5 +13,5 @@ public class UserDto {
     String email;
     String password;
     Account account;
-    LocalDateTime createdAt;
+    Date createdAt;
 }

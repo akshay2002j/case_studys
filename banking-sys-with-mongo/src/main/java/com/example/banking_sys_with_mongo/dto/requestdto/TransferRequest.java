@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 public class TransferRequest {
-    String accountNumber;
+    String account;
     BigDecimal amount;
     TransactionType type;
     String toAccountNumber;

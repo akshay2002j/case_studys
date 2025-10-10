@@ -12,5 +12,5 @@ public interface IAccountDao {
     Account saveAccount(Account account);
     Account findByAccountNumber(String accNumber);
     List<Account> findAll();
-    void deleteByAccountNumber(Account account);
+    boolean deleteByAccountNumber(String accountNumber);
 }

@@ -4,7 +4,7 @@ import com.example.banking_sys_with_mongo.model.TransactionType;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 public class TransactionDto {
@@ -12,7 +12,7 @@ public class TransactionDto {
     String account;
     BigDecimal amount;
     TransactionType type;
-    String toAccountNumber;
-    String fromAccountNumber;
-    LocalDateTime transactionDate;
+    String toAccount;
+    String fromAccount;
+    Date transactionDate;
 }

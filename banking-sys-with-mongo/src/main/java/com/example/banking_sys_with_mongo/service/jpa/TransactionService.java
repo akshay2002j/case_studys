@@ -63,9 +63,9 @@
 //    }
 //
 //    public TransactionDto transferTransaction(TransferRequest transferRequest) {
-//        Account toAccount = accountRepository.findAccountByAccountNumber(transferRequest.getToAccountNumber()).
+//        Account toAccount = accountRepository.findAccountByAccountNumber(transferRequest.getToAccount()).
 //                orElseThrow(() -> new AccountException("Account number not found"));
-//        Account fromAccount = accountRepository.findAccountByAccountNumber(transferRequest.getFromAccountNumber()).
+//        Account fromAccount = accountRepository.findAccountByAccountNumber(transferRequest.getFromAccount()).
 //                orElseThrow(() -> new AccountException("Account number not found"));
 //        if (fromAccount.getBalance().compareTo(transferRequest.getAmount()) < 0) {
 //            throw new AccountException("Insufficient funds");
@@ -83,8 +83,8 @@
 //        TransactionDto transactionDto = new TransactionDto();
 //        BeanUtils.copyProperties(savedTran, transactionDto);
 //        transactionDto.setAccount(savedTran.getAccount().getAccountNumber());
-//        transactionDto.setFromAccountNumber(fromAccount.getAccountNumber());
-//        transactionDto.setToAccountNumber(toAccount.getAccountNumber());
+//        transactionDto.setFromAccount(fromAccount.getAccountNumber());
+//        transactionDto.setToAccount(toAccount.getAccountNumber());
 //        return transactionDto;
 //    }
 //

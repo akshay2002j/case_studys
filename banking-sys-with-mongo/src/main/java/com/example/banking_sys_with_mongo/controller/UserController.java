@@ -17,25 +17,29 @@ public class UserController {
     public UserController(DaoUserService userService) {
         this.userService = userService;
     }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<UserDto> getUser( @PathVariable String id) {
-//        return new ResponseEntity<>(userService.getUser(id), HttpStatus.OK);
-//    }
-//
+
+    @GetMapping("/")
+    public ResponseEntity<UserDto> getUser(@RequestParam String id) {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    }
+
     @PostMapping("/")
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
         return new ResponseEntity<>(userService.saveUser(userDto), HttpStatus.CREATED);
     }
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<UserDto> updateUser(@PathVariable String id, @RequestBody UserDto userDto) {
-//        return new ResponseEntity<>(userService.updateUser(userDto), HttpStatus.OK);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> deleteUser(@PathVariable String id) {
-//        userService.deleteUser(id);
-//        return new ResponseEntity<>("User with id "+ id+ "deleted Successfully",HttpStatus.OK);
-//    }
+
+    @PutMapping("/")
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) {
+        return new ResponseEntity<>(userService.updateUser(userDto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable String id) {
+        if(userService.deleteUser(id)){
+            return new ResponseEntity<>("User with id "+ id+ "deleted Successfully",HttpStatus.ACCEPTED);
+        }
+       else  {
+            return new ResponseEntity<>("User with id "+ id+ "not found",HttpStatus.NOT_FOUND);
+       }
+    }
 }

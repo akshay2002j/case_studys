@@ -5,21 +5,18 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 
 public class Transaction {
 
     private String id;
-
-    private Account account;
-
+    private String account;
     private BigDecimal amount;
     private TransactionType type;
-
     private String toAccount;
     private String fromAccount;
-
-    private LocalDateTime transactionDate = LocalDateTime.now();
+    private Date transactionDate;
 }
 

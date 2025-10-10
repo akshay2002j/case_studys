@@ -4,16 +4,17 @@ import lombok.Data;
 
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 @Data
 public class Account {
 
     private String accountId;
     private String accountNumber;
-    private User user;
+    private String user;
     private BigDecimal balance;
-    private LocalDateTime updatedAt;
-    private LocalDateTime createdAt;
+    private Date updatedAt;
+    private Date createdAt;
 }
 

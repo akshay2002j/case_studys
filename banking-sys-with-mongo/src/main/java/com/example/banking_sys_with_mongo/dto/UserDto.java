@@ -3,7 +3,6 @@ package com.example.banking_sys_with_mongo.dto;
 import com.example.banking_sys_with_mongo.model.Account;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data

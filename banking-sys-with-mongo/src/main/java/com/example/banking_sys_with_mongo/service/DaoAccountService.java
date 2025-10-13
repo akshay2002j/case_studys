@@ -14,7 +14,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class DaoAccountService {
@@ -30,15 +29,16 @@ public class DaoAccountService {
     }
 
 
+    /// TODO
     public AccountDto openAccount(OpenAccountRequest openAccountRequest) {
-        User user = userDaoImpl.getUserById(openAccountRequest.getUserId());
+        User user = userDaoImpl.getById(openAccountRequest.getUserId());
         Account account = new Account();
         account.setUser(user.getUserId());
         account.setAccountNumber(AccountHelper.generateAccountNumber());
         account.setBalance(openAccountRequest.getBalance());
         account.setCreatedAt(new Date());
         account.setUpdatedAt(new Date());
-        Account savedAccount = accountDao.saveAccount(account);
+        Account savedAccount = accountDao.save(account);
         AccountDto accountDto = new AccountDto();
         BeanUtils.copyProperties(savedAccount, accountDto);
         return accountDto;
@@ -57,7 +57,7 @@ public class DaoAccountService {
     }
 
     public AccountDto updateAccount(AccountDto accountDto) {
-        User user = userDaoImpl.getUserById(accountDto.getUser());
+        User user = userDaoImpl.getById(accountDto.getUser());
         Account account = new Account();
         account.setAccountId(accountDto.getAccountId());
         account.setUser(user.getUserId());
@@ -72,7 +72,7 @@ public class DaoAccountService {
     public boolean deleteAccount(String accountNumber) {
         return accountDao.deleteByAccountNumber(accountNumber);
     }
-//
+
 //    public List<AccountDto> getAllAccountsByUserId(String userId) {
 //
 //    }

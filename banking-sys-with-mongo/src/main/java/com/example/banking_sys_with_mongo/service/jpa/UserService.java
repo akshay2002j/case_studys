@@ -34,7 +34,7 @@
 //        }
 //    }
 //
-//    public UserDto updateUser(UserDto userDto) {
+//    public UserDto update(UserDto userDto) {
 //        try {
 //            User user = userRepository.findById(userDto.getUserId()).orElseThrow(() -> new UserException("User not found with id " + userDto.getUserId()));
 //            BeanUtils.copyProperties(userDto, user);
@@ -48,7 +48,7 @@
 //        }
 //    }
 //
-//    public String deleteUser(String id) {
+//    public String deleteById(String id) {
 //        if (id != null) {
 //            userRepository.deleteById(id);
 //        }

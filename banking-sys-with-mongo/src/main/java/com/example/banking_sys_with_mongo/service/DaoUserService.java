@@ -19,7 +19,7 @@ public class DaoUserService {
     public UserDto saveUser(UserDto userDto) {
         User user = new User();
         BeanUtils.copyProperties(userDto, user);
-        User savedUser = userDaoImpl.saveUser(user);
+        User savedUser = userDaoImpl.save(user);
         BeanUtils.copyProperties(savedUser, userDto);
         return userDto;
     }
@@ -27,17 +27,17 @@ public class DaoUserService {
     public UserDto updateUser(UserDto userDto) {
         User user = new User();
         BeanUtils.copyProperties(userDto, user);
-        User savedUser = userDaoImpl.updateUser(user);
+        User savedUser = userDaoImpl.update(user);
         BeanUtils.copyProperties(savedUser, userDto);
         return userDto;
     }
 
     public boolean deleteUser(String userId) {
-        return userDaoImpl.deleteUser(userId);
+        return userDaoImpl.deleteById(userId);
     }
 
     public UserDto getUserById(String userId) {
-        User user = userDaoImpl.getUserById(userId);
+        User user = userDaoImpl.getById(userId);
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(user, userDto);
         return userDto;

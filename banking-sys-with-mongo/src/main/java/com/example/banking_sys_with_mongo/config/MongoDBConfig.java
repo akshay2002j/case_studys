@@ -1,6 +1,7 @@
 package com.example.banking_sys_with_mongo.config;
 
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,4 +30,10 @@ public class MongoDBConfig {
         System.out.println("Using MongoDB database: " + database);
         return client.getDB(this.database);
     }
+
+    @Bean
+    public DBCollection getCollection(DB mongoDB) {
+        return mongoDB.getCollection("users");
+    }
+
 }

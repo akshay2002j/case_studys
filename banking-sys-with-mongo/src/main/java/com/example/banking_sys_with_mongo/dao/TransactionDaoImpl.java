@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Repository
-public class TransactionDaoImpl {
+public class TransactionDaoImpl implements ITransactionDao {
 
     @Autowired
     private DB mongoDB;
@@ -21,7 +21,12 @@ public class TransactionDaoImpl {
         return mongoDB.getCollection("transactions");
     }
 
-
+    /**
+     * @param transaction transaction class object for deposit or withdraw from account
+     * @return transaction that has taken place weather deposit or withdraw
+     * @author Akshay Jadhav
+     * @description this method makes the transaction it will we deposit or withdraw
+     */
     public Transaction makeTransaction(Transaction transaction) {
         DBCollection collection = getCollection();
         BasicDBObject document = new BasicDBObject();
@@ -33,7 +38,12 @@ public class TransactionDaoImpl {
         transaction.setId(document.get("_id").toString());
         return transaction;
     }
-
+    /**
+     * Inserts a new transfer transaction (between two accounts) into the collection.
+     * This method stores additional fields like {@code toAccount} and {@code fromAccount}.
+     * @param transaction the {@link Transaction} object containing transfer details.
+     * @return the saved {@link Transaction} with its MongoDB _id field set.
+     */
     public Transaction makeTransferTransaction(Transaction transaction) {
         DBCollection collection = getCollection();
         BasicDBObject document = new BasicDBObject();
@@ -48,6 +58,12 @@ public class TransactionDaoImpl {
         return transaction;
     }
 
+    /**
+     * Fetches a single transaction document by its unique ID.
+     *
+     * @param id the MongoDB document ID of the transaction.
+     * @return a populated {@link Transaction} object if found, otherwise {@code null}.
+     */
     public Transaction getTransactionById(String id) {
         DBCollection collection = getCollection();
         BasicDBObject document = new BasicDBObject();
@@ -74,7 +90,12 @@ public class TransactionDaoImpl {
         }
         return null;
     }
-
+    /**
+     * Deletes a transaction document by its MongoDB ID.
+     *
+     * @param id the ID of the transaction document to delete.
+     * @return {@code true} if the deletion was acknowledged by MongoDB, otherwise {@code false}.
+     */
     public boolean deleteTransactionById(String id) {
         DBCollection collection = getCollection();
         BasicDBObject document = new BasicDBObject();
@@ -83,6 +104,13 @@ public class TransactionDaoImpl {
         return writeResult.wasAcknowledged();
     }
 
+    /**
+     * Retrieves all transactions for a given account number.
+     * <p>
+     * This includes deposits, withdrawals, and transfer records.
+     * @param accountNumber the account number to filter transactions.
+     * @return a {@link List} of {@link Transaction} objects belonging to that account.
+     */
     public List<Transaction> getAllTransactionByAccount(String accountNumber) {
 
         DBCollection collection = this.getCollection();
@@ -123,10 +151,17 @@ public class TransactionDaoImpl {
         return transactionList;
     }
 
+    /**
+     * Performs an aggregation query to count the number of transactions by type
+     * (e.g., WITHDRAW, DEPOSIT) for a given account.
+     *
+     * @param accountNumber the account number to filter transactions.
+     * @return a {@link Map} where the key is the transaction type and the value is the count.
+     */
     public Map<String,String> numberOfTransactionsByAccount(String accountNumber) {
         DBCollection collection = getCollection();
         //stage 1: $match
-        BasicDBObject match = new BasicDBObject("$match", new BasicDBObject("account", accountNumber));
+        BasicDBObject match = new BasicDBObject("$match", new BasicDBObject("account", accountNumber).append("type","WITHDRAW"));
         // Stage 2: $group
         BasicDBObject groupFields = new BasicDBObject("_id", "$type");
         groupFields.put("count", new BasicDBObject("$sum", 1));

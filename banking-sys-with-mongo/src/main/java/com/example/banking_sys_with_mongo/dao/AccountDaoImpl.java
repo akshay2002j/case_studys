@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.List;
+
 
 @Repository
 public class AccountDaoImpl implements IAccountDao {
@@ -22,8 +22,14 @@ public class AccountDaoImpl implements IAccountDao {
         return mongoDB.getCollection("accounts");
     }
 
+    /**
+     * @param account object of the Account class
+     * @return Account class object on successfully save operation
+     * @author Akshay Jadhav
+     * @description the method saves the account entity in the accounts mongo collection
+     */
     @Override
-    public Account saveAccount(Account account) {
+    public Account save(Account account) {
         DBCollection collection = this.getCollection();
         BasicDBObject document = new BasicDBObject();
         document.put("accountNumber", account.getAccountNumber());
@@ -36,6 +42,13 @@ public class AccountDaoImpl implements IAccountDao {
         return account;
     }
 
+
+    /**
+     * @param accNumber valid account number of the user belong to the Account
+     * @return Account class object on successfully find operation
+     * @author Akshay Jadhav
+     * @description finds the account with associated account number
+     */
     @Override
     public Account findByAccountNumber(String accNumber) {
         DBCollection collection = this.getCollection();
@@ -64,11 +77,12 @@ public class AccountDaoImpl implements IAccountDao {
         return null;
     }
 
-    @Override
-    public List<Account> findAll() {
-        return List.of();
-    }
-
+    /**
+     * @param accNumber valid account number of the user belong to the Account
+     * @return boolean value if deleted operation is successfully then true else false
+     * @author Akshay Jadhav
+     * @description deletes the account associated with account number
+     */
     @Override
     public boolean deleteByAccountNumber(String accNumber) {
         DBCollection collection = this.getCollection();
@@ -78,6 +92,12 @@ public class AccountDaoImpl implements IAccountDao {
         return writeResult.wasAcknowledged();
     }
 
+    /**
+     * @param account
+     * @return the updated account class object
+     * @author Akshay Jadhav
+     * @description updates the account class object depending on the changes received
+     */
     public Account updateAccount(Account account) {
         DBCollection collection = this.getCollection();
         BasicDBObject document = new BasicDBObject();

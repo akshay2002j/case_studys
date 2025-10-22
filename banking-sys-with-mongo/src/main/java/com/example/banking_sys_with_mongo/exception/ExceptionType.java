@@ -7,7 +7,7 @@ public enum ExceptionType {
     ACCOUNT_NOT_FOUND("AC404", "Account not found"),
     ACCOUNT_ALREADY_EXISTS("AC406", "Account already exists"),
     INSUFFICIENT_BALANCE("AC400", "Insufficient balance"),
-
+    BD_ERROR("B500", "Database error"),
     ;
 
 

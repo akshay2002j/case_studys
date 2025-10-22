@@ -25,4 +25,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleException(TransactionException e){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+    @ExceptionHandler(DBException.class)
+    public ResponseEntity<String> handleDBException(DBException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 }

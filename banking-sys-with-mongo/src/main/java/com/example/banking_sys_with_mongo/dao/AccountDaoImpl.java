@@ -1,5 +1,7 @@
 package com.example.banking_sys_with_mongo.dao;
 
+import com.example.banking_sys_with_mongo.exception.DBException;
+import com.example.banking_sys_with_mongo.exception.ExceptionType;
 import com.example.banking_sys_with_mongo.model.Account;
 import com.mongodb.*;
 import org.bson.types.Decimal128;
@@ -30,16 +32,21 @@ public class AccountDaoImpl implements IAccountDao {
      */
     @Override
     public Account save(Account account) {
-        DBCollection collection = this.getCollection();
-        BasicDBObject document = new BasicDBObject();
-        document.put("accountNumber", account.getAccountNumber());
-        document.put("user", account.getUser());
-        document.put("balance", account.getBalance());
-        document.put("updatedAt", LocalDateTime.now());
-        document.put("createdAt", LocalDateTime.now());
-        collection.insert(document);
-        account.setAccountId(document.get("_id").toString());
-        return account;
+        try {
+            DBCollection collection = this.getCollection();
+            BasicDBObject document = new BasicDBObject();
+            document.put("accountNumber", account.getAccountNumber());
+            document.put("user", account.getUser());
+            document.put("balance", account.getBalance());
+            document.put("updatedAt", LocalDateTime.now());
+            document.put("createdAt", LocalDateTime.now());
+            collection.insert(document);
+            account.setAccountId(document.get("_id").toString());
+            return account;
+        }
+        catch (MongoException e) {
+            throw new DBException(ExceptionType.BD_ERROR);
+        }
     }
 
 
@@ -51,30 +58,36 @@ public class AccountDaoImpl implements IAccountDao {
      */
     @Override
     public Account findByAccountNumber(String accNumber) {
-        DBCollection collection = this.getCollection();
-        BasicDBObject document = new BasicDBObject();
-        document.put("accountNumber", accNumber);
-        DBObject result = collection.findOne(document);
-        Account account = new Account();
-        if (result != null) {
-            account.setAccountId(result.get("_id").toString());
-            account.setAccountNumber(accNumber);
-            Object balanceObj = result.get("balance");
-            BigDecimal balance;
-            if (balanceObj instanceof Decimal128) {
-                balance = ((Decimal128) balanceObj).bigDecimalValue();
-            } else if (balanceObj instanceof Double) {
-                balance = BigDecimal.valueOf((Double) balanceObj);
-            } else {
-                balance = new BigDecimal(balanceObj.toString());
+
+        try {
+            DBCollection collection = this.getCollection();
+            BasicDBObject document = new BasicDBObject();
+            document.put("accountNumber", accNumber);
+            DBObject result = collection.findOne(document);
+            Account account = new Account();
+            if (result != null) {
+                account.setAccountId(result.get("_id").toString());
+                account.setAccountNumber(accNumber);
+                Object balanceObj = result.get("balance");
+                BigDecimal balance;
+                if (balanceObj instanceof Decimal128) {
+                    balance = ((Decimal128) balanceObj).bigDecimalValue();
+                } else if (balanceObj instanceof Double) {
+                    balance = BigDecimal.valueOf((Double) balanceObj);
+                } else {
+                    balance = new BigDecimal(balanceObj.toString());
+                }
+                account.setBalance(balance);
+                account.setUser(result.get("user").toString());
+                account.setCreatedAt((Date) result.get("createdAt"));
+                account.setCreatedAt((Date) result.get("updatedAt"));
+                return account;
             }
-            account.setBalance(balance);
-            account.setUser(result.get("user").toString());
-            account.setCreatedAt((Date) result.get("createdAt"));
-            account.setCreatedAt((Date) result.get("updatedAt"));
-            return account;
+            return null;
         }
-        return null;
+        catch (DBException e){
+            throw  new DBException(ExceptionType.BD_ERROR);
+        }
     }
 
     /**
@@ -85,11 +98,17 @@ public class AccountDaoImpl implements IAccountDao {
      */
     @Override
     public boolean deleteByAccountNumber(String accNumber) {
-        DBCollection collection = this.getCollection();
-        BasicDBObject document = new BasicDBObject();
-        document.put("accountNumber", accNumber);
-        WriteResult writeResult = collection.remove(document);
-        return writeResult.wasAcknowledged();
+        try {
+            DBCollection collection = this.getCollection();
+            BasicDBObject document = new BasicDBObject();
+            document.put("accountNumber", accNumber);
+            WriteResult writeResult = collection.remove(document);
+            return writeResult.wasAcknowledged();
+        }
+        catch (MongoException e){
+            throw new DBException(ExceptionType.BD_ERROR);
+        }
+
     }
 
     /**
@@ -99,16 +118,22 @@ public class AccountDaoImpl implements IAccountDao {
      * @description updates the account class object depending on the changes received
      */
     public Account updateAccount(Account account) {
-        DBCollection collection = this.getCollection();
-        BasicDBObject document = new BasicDBObject();
-        document.put("accountNumber", account.getAccountNumber());
-        document.put("user", account.getUser());
-        document.put("balance", account.getBalance());
-        document.put("updatedAt", new Date());
-        BasicDBObject updateDocument = new BasicDBObject("$set", document);
-        BasicDBObject query = new BasicDBObject("_id", new ObjectId(account.getAccountId()));
-        collection.update(query,updateDocument,false,false);
-        return account;
+
+        try {
+            DBCollection collection = this.getCollection();
+            BasicDBObject document = new BasicDBObject();
+            document.put("accountNumber", account.getAccountNumber());
+            document.put("user", account.getUser());
+            document.put("balance", account.getBalance());
+            document.put("updatedAt", new Date());
+            BasicDBObject updateDocument = new BasicDBObject("$set", document);
+            BasicDBObject query = new BasicDBObject("_id", new ObjectId(account.getAccountId()));
+            collection.update(query, updateDocument, false, false);
+            return account;
+        }
+        catch (MongoException e){
+            throw new DBException(ExceptionType.BD_ERROR);
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.example.banking_sys_with_mongo.dao;
 
+import com.example.banking_sys_with_mongo.exception.DBException;
 import com.example.banking_sys_with_mongo.exception.ExceptionType;
 import com.example.banking_sys_with_mongo.exception.UserException;
 import com.example.banking_sys_with_mongo.model.User;
@@ -24,7 +25,11 @@ public class UserDaoImpl implements IUserDao {
         return mongoDB.getCollection("users");
     }
 
-
+    /**
+     * @param user save method takes the {@link User} for persisting in DB
+     * @return it returns the saved instance of {@link User}
+     * @author Akshay Jadhav
+     */
     public User save(User user) {
         try {
             DBCollection collection = this.getCollection();
@@ -40,10 +45,15 @@ public class UserDaoImpl implements IUserDao {
         }
         catch (Exception e) {
             log.error(e.getMessage());
-            throw  new RuntimeException(e.getMessage());
+            throw  new DBException(ExceptionType.BD_ERROR);
         }
     }
 
+    /**
+     * @param id this takes the valid userId which refers to MongoDB _id
+     * @return the {@link User} object which is saved on DB
+     * @author Akshay jadhav
+     */
     public User getById(String id) {
             DBCollection collection = this.getCollection();
             BasicDBObject query = new BasicDBObject();
@@ -63,6 +73,11 @@ public class UserDaoImpl implements IUserDao {
             }
     }
 
+    /**
+     * @param user the {@link User} object which is saved on DB
+     * @return the {@link User} object which is updated in DB
+     * @author Akshay Jadhav
+     */
     public User update(User user) {
         try {
             DBCollection collection = this.getCollection();
@@ -79,11 +94,16 @@ public class UserDaoImpl implements IUserDao {
         }
         catch (Exception e) {
             log.error(e.getMessage());
-            throw  new RuntimeException(e.getMessage());
+            throw  new DBException(ExceptionType.BD_ERROR);
         }
 
     }
 
+    /**
+     * @param id the valid user id which should be be in DB
+     * @return {@code true} if the deletion was acknowledged by MongoDB, otherwise {@code false}.
+     * @author Akshay Jadav
+     */
     public boolean deleteById(String id) {
 
         try {
@@ -95,7 +115,7 @@ public class UserDaoImpl implements IUserDao {
         }
         catch (MongoException me){
             log.error(me.getMessage());
-            throw  new RuntimeException(me.getMessage());
+            throw  new DBException(ExceptionType.BD_ERROR);
         }
         catch (Exception e) {
             log.error(e.getMessage());

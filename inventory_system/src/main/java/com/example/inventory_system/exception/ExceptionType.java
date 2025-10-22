@@ -1,0 +1,11 @@
+package com.example.inventory_system.exception;
+
+public enum ExceptionType {
+    PRODUCT_NOT_FOUND,
+    PRODUCT_ALREADY_EXISTS,
+    PRODUCT_NOT_ENOUGH,
+    PRODUCT_ALREADY_DELETED,
+    PRODUCT_NOT_ENOUGH_QUANTITY,
+    SUPPLIER_NOT_FOUND,
+    SUPPLIER_ALREADY_EXISTS,
+}

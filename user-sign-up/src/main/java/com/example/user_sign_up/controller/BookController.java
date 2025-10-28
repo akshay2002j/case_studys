@@ -23,8 +23,8 @@ public class BookController {
     @GetMapping("/list")
     public ResponseEntity<?> getAllBooks(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "bookId") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection
     ){
         return new ResponseEntity<>(bookService.getBooks(page,size,sortBy,sortDirection), HttpStatus.OK);

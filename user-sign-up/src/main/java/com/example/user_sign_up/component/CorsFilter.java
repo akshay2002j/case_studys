@@ -21,7 +21,7 @@ public class CorsFilter extends OncePerRequestFilter {
 
         response.setHeader("Access-Control-Allow-Origin", "http://127.0.0.1:5500");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type,email");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type,email,sessionId");
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {

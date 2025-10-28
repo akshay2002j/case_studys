@@ -28,7 +28,9 @@ public class UserService {
 
     public UserDto getUserByEmail(String email){
         User savedUser =  userRepository.findByEmail(email).orElseThrow(
-                ()-> new RuntimeException("User not found with email " + email)
+                ()->{
+                  throw  new RuntimeException("User not found with email " + email);
+                }
         );
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(savedUser,userDto);

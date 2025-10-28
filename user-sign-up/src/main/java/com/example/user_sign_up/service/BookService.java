@@ -5,12 +5,15 @@ import com.example.user_sign_up.entity.Book;
 import com.example.user_sign_up.repo.BookRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookService {
@@ -37,16 +40,24 @@ public class BookService {
         return bookDto;
     }
 
-    public List<BookDto> getBooks(int page, int size, String sortBy, String sortDirection) {
+    public Map<String, Object>  getBooks(int page, int size, String sortBy, String sortDirection) {
         Sort.Direction direction = Sort.Direction.fromString(sortDirection);
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        List<Book> books = bookRepository.findAll(pageable).getContent();
-        return books.stream().map(
-                book -> {
-                    BookDto bookDto = new BookDto();
-                    BeanUtils.copyProperties(book, bookDto);
-                    return bookDto;
-                }
-        ).toList();
+        Page<Book> pageBooks = bookRepository.findAll(pageable);
+
+        List<BookDto> books = pageBooks.getContent()
+                .stream()
+                .map(book -> {
+                    BookDto dto = new BookDto();
+                    BeanUtils.copyProperties(book, dto, "bookId");
+                    return dto;
+                })
+                .toList();
+        Map<String, Object> response = new HashMap<>();
+        response.put("data", books);
+        response.put("totalRecords", pageBooks.getTotalElements());
+        response.put("totalPages", pageBooks.getTotalPages());
+        response.put("currentPage", page);
+        return response;
     }
 }

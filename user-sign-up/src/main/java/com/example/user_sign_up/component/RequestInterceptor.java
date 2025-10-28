@@ -1,10 +1,12 @@
 package com.example.user_sign_up.component;
 
 
+import com.example.user_sign_up.entity.UserSession;
+import com.example.user_sign_up.service.UserSessionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -12,26 +14,28 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Component
 public class RequestInterceptor implements HandlerInterceptor {
 
+    @Autowired
+    UserSessionService userSessionService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String uri = request.getRequestURI();
-        HttpSession session = request.getSession(false);
+        String sessionId = request.getHeader("sessionId");
 
         if (uri.contains("/login") || uri.contains("/register")) {
             return true;
         }
-
-        if (session != null && session.getAttribute("email") != null) {
-            return true;  // Session valid, proceed to controller
+        UserSession userSession = userSessionService.findBySessionId(sessionId).orElse(null);
+        if (userSession != null && userSessionService.checkSessionExpired(sessionId)) {
+            log.info("User loged in with session " + userSession.getSessionId());
+            return true;
+        }
+       else {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return false;
         }
 
-        // Session invalid → block access
-//        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//        response.getWriter().write("Access Denied! Please login first.");
-//        return false;  // Stop request from reaching controller
-        return true;
     }
 
 }

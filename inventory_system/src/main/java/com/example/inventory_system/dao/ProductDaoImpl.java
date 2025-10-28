@@ -31,8 +31,8 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public List<Product> getAllProducts() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Product> query = session.createQuery("from Product", Product.class);
-            return query.list();
+            Query<Product> listOfProduct = session.createQuery("from Product");
+            return listOfProduct.list();
         }
     }
 

@@ -43,4 +43,9 @@ public class DaoUserService {
         return userDto;
     }
 
+    public User getUserByEmail(String email) {
+        User user = userDaoImpl.getByEmail(email);
+        return user;
+    }
+
 }

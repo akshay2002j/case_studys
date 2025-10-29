@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -20,19 +21,19 @@ public class ProductController {
     private ProductService  productService;
 
 
-    @PostMapping("/")
+    @PostMapping("/{supplierName}")
     public ResponseEntity<Product> addProduct(@RequestBody Product product, @PathVariable String supplierName) {
         Product product1 = productService.addProduct(product,supplierName);
         return  new ResponseEntity<>(product1, HttpStatus.OK);
     }
 
-    @PutMapping("/")
+    @PutMapping("/{id}/{quantity}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @PathVariable int quantity) {
        Product product = productService.updateStock(id,quantity);
        return  new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
          productService.deleteProduct(id);
          return  new ResponseEntity<>(HttpStatus.OK);
@@ -46,7 +47,9 @@ public class ProductController {
     @GetMapping("/total")
     public ResponseEntity<?> totalInventoryValue () {
         Double value = productService.totalInventoryValue();
-        return new ResponseEntity<>(new HashMap<>().put("Total Value",value), HttpStatus.OK);
+        Map<String,Double> map = new HashMap<>();
+        map.put("Total value",value);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
 }

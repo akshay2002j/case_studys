@@ -1,6 +1,7 @@
 package com.example.inventory_system.controller;
 
 
+import com.example.inventory_system.dto.SupplierDto;
 import com.example.inventory_system.entity.Supplier;
 import com.example.inventory_system.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class SupplierController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Supplier> getSupplierById(@PathVariable Long id) {
+    public ResponseEntity<SupplierDto> getSupplierById(@PathVariable Long id) {
         return ResponseEntity.ok(supplierService.getSupplierById(id));
     }
 

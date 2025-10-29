@@ -123,5 +123,25 @@ public class UserDaoImpl implements IUserDao {
         }
     }
 
+    public User getByEmail(String email) {
+        DBCollection collection = this.getCollection();
+        BasicDBObject query = new BasicDBObject();
+        query.put("email",email);
+        DBObject result = collection.findOne(query);
+        User user = new User();
+        if (result != null) {
+            user.setUserId(result.get("_id").toString());
+            user.setName(result.get("name").toString());
+            user.setEmail(result.get("email").toString());
+            user.setPassword(result.get("password").toString());
+            user.setCreatedAt((Date) result.get("createdAt"));
+            return user;
+        }
+        else {
+            throw new UserException(ExceptionType.USER_NOT_FOUND);
+        }
+    }
+
+
 
 }

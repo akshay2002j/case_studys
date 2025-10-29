@@ -1,7 +1,10 @@
 package com.example.inventory_system.dao;
 
 import com.example.inventory_system.entity.Product;
+import com.example.inventory_system.exception.DBException;
+import com.example.inventory_system.exception.ExceptionType;
 import com.example.inventory_system.util.HibernateUtil;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -19,20 +22,40 @@ public class ProductDaoImpl implements ProductDao {
             session.persist(product);
             tx.commit();
         }
+        catch (HibernateException e) {
+            throw new DBException(ExceptionType.DB_EXCEPTION);
+        }
     }
 
     @Override
     public Product getProductById(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.getReference(Product.class, id);
+            Transaction tx = session.beginTransaction();
+            Product product =  session.getReference(Product.class, id);
+            Product product1 = new Product();
+            product1.setId(product.getId());
+            product1.setName(product.getName());
+            product1.setPrice(product.getPrice());
+            product1.setQuantity(product.getQuantity());
+            tx.commit();
+            return product1;
+        }
+        catch (HibernateException e) {
+            throw new DBException(ExceptionType.DB_EXCEPTION);
         }
     }
 
     @Override
     public List<Product> getAllProducts() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Product> listOfProduct = session.createQuery("from Product");
-            return listOfProduct.list();
+            List<Product> products = session.createSelectionQuery("from Product", Product.class).list();
+            return products;
+        }
+        catch (HibernateException e) {
+            throw new DBException(ExceptionType.DB_EXCEPTION);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -42,6 +65,9 @@ public class ProductDaoImpl implements ProductDao {
             Transaction tx = session.beginTransaction();
             session.merge(product);
             tx.commit();
+        }
+        catch (HibernateException e) {
+            throw new DBException(ExceptionType.DB_EXCEPTION);
         }
     }
 
@@ -53,6 +79,9 @@ public class ProductDaoImpl implements ProductDao {
             if (p != null) session.detach(p);
             tx.commit();
         }
+        catch (HibernateException e) {
+            throw new DBException(ExceptionType.DB_EXCEPTION);
+        }
     }
 
     @Override
@@ -63,6 +92,9 @@ public class ProductDaoImpl implements ProductDao {
             query.setParameter("threshold", threshold);
             return query.list();
         }
+        catch (HibernateException e) {
+            throw new DBException(ExceptionType.DB_EXCEPTION);
+        }
     }
 
     @Override
@@ -70,7 +102,10 @@ public class ProductDaoImpl implements ProductDao {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<Double> query = session.createQuery(
                     "SELECT SUM(p.price * p.quantity) FROM Product p", Double.class);
-            return query.uniqueResult();
+            return query.getSingleResult();
+        }
+        catch (HibernateException e) {
+            throw new DBException(ExceptionType.DB_EXCEPTION);
         }
     }
 }

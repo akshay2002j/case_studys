@@ -4,6 +4,6 @@ public class ProductException extends RuntimeException {
 
 
     public  ProductException(ExceptionType type) {
-
+        super(type.message);
     }
 }

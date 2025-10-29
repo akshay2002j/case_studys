@@ -4,6 +4,6 @@ public class SupplierException extends RuntimeException {
 
 
    public SupplierException(ExceptionType type) {
-
+        super(type.message);
     }
 }

@@ -19,7 +19,7 @@ public class Supplier {
     private String contactEmail;
     private String phone;
 
-    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL ,fetch = FetchType.EAGER)
     private List<Product> products = new ArrayList<>();
 
 

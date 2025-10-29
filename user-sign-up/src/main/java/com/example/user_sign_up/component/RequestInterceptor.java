@@ -19,11 +19,11 @@ public class RequestInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
         String uri = request.getRequestURI();
         String sessionId = request.getHeader("sessionId");
 
         if (uri.contains("/login") || uri.contains("/register")) {
+
             return true;
         }
         UserSession userSession = userSessionService.findBySessionId(sessionId).orElse(null);
@@ -32,7 +32,11 @@ public class RequestInterceptor implements HandlerInterceptor {
             return true;
         }
        else {
+           log.error("User does not have valid session ");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\":\"Session expired or invalid\"}");
+            response.getWriter().flush();
             return false;
         }
 

@@ -1,9 +1,12 @@
 package com.example.inventory_system.service;
 
 import com.example.inventory_system.dao.SupplierDao;
+import com.example.inventory_system.dto.SupplierDto;
 import com.example.inventory_system.entity.Supplier;
 import com.example.inventory_system.exception.ExceptionType;
 import com.example.inventory_system.exception.SupplierException;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,8 +39,18 @@ public class SupplierService {
         supplierDao.deleteSupplier(id);
     }
 
-    public Supplier getSupplierById(Long id) {
-        return supplierDao.getSupplierById(id);
+
+    public SupplierDto getSupplierById(Long id) {
+        Supplier supplier =  supplierDao.getSupplierById(id);
+        if (supplier == null) {
+            throw new SupplierException(ExceptionType.SUPPLIER_NOT_FOUND);
+        }
+        SupplierDto supplierDto = new SupplierDto();
+        supplierDto.setId(supplier.getId());
+        supplierDto.setName(supplier.getName());
+        supplierDto.setContactEmail(supplier.getContactEmail());
+        supplierDto.setPhone(supplier.getPhone());
+        return supplierDto;
     }
 
     public Supplier getSupplierByName(String name) {

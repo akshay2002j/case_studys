@@ -2,6 +2,7 @@ package com.example.user_sign_up.service;
 
 import com.example.user_sign_up.entity.UserSession;
 import com.example.user_sign_up.repo.UserSessionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,13 @@ public class UserSessionService  {
         return session;
     }
 
-    public boolean deleteSessionBySessionId(String email){
-        userSessionRepository.deleteUserSessionByEmail(email);
+    public Optional<UserSession> findByEmail(String email) {
+        return userSessionRepository.findByEmail(email);
+    }
+
+    @Transactional
+    public boolean deleteSessionBySessionId(String sessionId) {
+        userSessionRepository.deleteBySessionId(sessionId);
         return true;
     }
 

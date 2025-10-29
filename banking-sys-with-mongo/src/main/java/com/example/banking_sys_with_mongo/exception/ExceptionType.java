@@ -8,6 +8,7 @@ public enum ExceptionType {
     ACCOUNT_ALREADY_EXISTS("AC406", "Account already exists"),
     INSUFFICIENT_BALANCE("AC400", "Insufficient balance"),
     BD_ERROR("B500", "Database error"),
+    INVALID_CREDENTIALS("B500", "Invalid credentials"),
     ;
 
 

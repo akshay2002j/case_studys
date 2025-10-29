@@ -14,7 +14,7 @@ public class Product {
     private String name;
     private int quantity;
     private double price;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 }
